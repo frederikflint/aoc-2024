@@ -43,4 +43,7 @@ bin
 .history
 .ionide
 
+aoc-library.tests/Tests
+aoc-library/Inputs
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,fsharp,dotnetcore
