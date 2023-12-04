@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "aoc-library", "aoc-library\aoc-library.fsproj", "{003FEA1F-5697-4EE9-A594-2D497FA794CF}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "aoc-library.tests", "aoc-library.tests\aoc-library.tests.fsproj", "{9988291F-EE66-44A2-9FC6-7628A56BFF4E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "aoc-executor", "aoc-executor\aoc-executor.fsproj", "{71A9DD49-C9AE-41F6-B2C0-44D6C6E50DBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{003FEA1F-5697-4EE9-A594-2D497FA794CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{003FEA1F-5697-4EE9-A594-2D497FA794CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{003FEA1F-5697-4EE9-A594-2D497FA794CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{003FEA1F-5697-4EE9-A594-2D497FA794CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9988291F-EE66-44A2-9FC6-7628A56BFF4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9988291F-EE66-44A2-9FC6-7628A56BFF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9988291F-EE66-44A2-9FC6-7628A56BFF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9988291F-EE66-44A2-9FC6-7628A56BFF4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71A9DD49-C9AE-41F6-B2C0-44D6C6E50DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A9DD49-C9AE-41F6-B2C0-44D6C6E50DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A9DD49-C9AE-41F6-B2C0-44D6C6E50DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A9DD49-C9AE-41F6-B2C0-44D6C6E50DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
