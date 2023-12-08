@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Include="AOC1.fs" />
     <Compile Include="AOC2.fs" />
+    <Compile Include="AOC3.fs" />
+    <Compile Include="AOC4.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

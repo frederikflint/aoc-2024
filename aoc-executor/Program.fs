@@ -16,3 +16,19 @@ let res2_1 =
     aoc2.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-2.txt")
 
 printfn "%d %d" res2 res2_1
+
+let res3 =
+    aoc3.produceSolution(util.readLinesFromFile "aoc-library/Inputs/aoc-3.txt")
+    
+let res3_1 =
+    aoc3.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-3.txt")
+    
+printfn "%d %d" res3 res3_1
+
+let res4 =
+    aoc4.produceSolution(util.readLinesFromFile "aoc-library/Inputs/aoc-4.txt")
+    
+let res4_1 =
+    aoc4.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-4.txt")
+    
+printfn "%d %d" res4 res4_1
