@@ -28,7 +28,17 @@ printfn "%d %d" res3 res3_1
 let res4 =
     aoc4.produceSolution(util.readLinesFromFile "aoc-library/Inputs/aoc-4.txt")
     
-let res4_1 =
-    aoc4.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-4.txt")
+// Outcommented cuz slow
+// let res4_1 =
+//     aoc4.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-4.txt")
+//     
+// printfn "%d %d" res4 res4_1
+
+let res5 =
+    aoc5.produceSolution1(util.readLinesFromFile "aoc-library/Inputs/aoc-5.txt")
     
-printfn "%d %d" res4 res4_1
+let res5_1 =
+    aoc5.produceSolution2(util.readLinesFromFile "aoc-library/Inputs/aoc-5.txt")
+    
+printfn "%d" res5
+printfn "%d" res5_1

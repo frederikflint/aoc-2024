@@ -1,6 +1,7 @@
 ﻿namespace aoc_library
 
 open System.Text.RegularExpressions
+open Microsoft.FSharp.Collections
 
 module util =
     open System.IO
@@ -294,6 +295,17 @@ module aoc4 =
     let countWinningNumbers ((winning: int list), (yours: int list)) =
         (List.filter (fun num -> List.contains num winning) yours).Length
         
+        
+    let rec calculata (input: (int list * int list) list) index =
+        match (input, index) with
+        | [], _ -> 0
+        | _, index when index = input.Length -> 0
+        | arr, index -> let head = arr[index]
+                        let winningNums = countWinningNumbers head
+                        winningNums +
+                        match winningNums with
+                        | 0 -> calculata arr (index + 1)
+                        | win -> + List.fold (fun acc num -> acc + calculata arr num) 0 [(index + 1)..(index+win)] + (calculata arr (index + 1))    
                     
     let rec calculate (input: (int list * int list) list) =
         match input with
@@ -313,32 +325,128 @@ module aoc4 =
         | head::tail -> (index, head)::(addGameNum tail (index + 1))
         | [] -> []
         
-    let rec cloneGames (input: (int * (int list * int list)) list) (indexList: int list) =
+    let countIndices (input: (int * (int list * int list)) list) (gameNr: int) = (List.filter (fun (a,_) -> a = gameNr) input).Length
+        
+        
+    let rec cloneGames (input: (int * (int list * int list)) list) (indexList: int list) (cloneAmount: int) =
         match (input, indexList) with
         | ([],_) -> []
         | (ls, []) -> ls
         | ((gameNr, game)::rest, firstIndex::restIndex) when gameNr = firstIndex ->
             let game = (gameNr, game)
-            game::game::(cloneGames rest restIndex)
-        | (game::rest, indices) -> game::(cloneGames rest indices)
+            let clonedGames = List.map (fun _ -> game) [1..cloneAmount]
+            let indexToSkip = countIndices rest gameNr
+            game::rest[0..indexToSkip - 1]@clonedGames@(cloneGames (rest[indexToSkip..rest.Length - 1]) restIndex cloneAmount)
+        | (game::rest, indices) -> game::(cloneGames rest indices cloneAmount) 
     let produceSolution2 lines =
-        let parsedLines = addGameNum (lines |> List.map parseLine) 1
+        let parsedLines =  (lines |> List.map parseLine)
         
+        let gamess = addGameNum parsedLines 1
+        
+        // let test = calculata parsedLines 0
+                
         let mutable keepRunning = true
-        let mutable games = parsedLines
+        let mutable games = gamess
         let mutable index = 0
+        let mutable amount = 1
         
         while keepRunning do
             let gameNr, game = games[index]
             let winningNumbers = countWinningNumbers game
             
+            amount <- countIndices games gameNr
             if winningNumbers > 0 then
-                games <- cloneGames games [gameNr+1..gameNr+winningNumbers]
                 
-            index <- index + 1    
+                let former = games[0..(index + amount) - 1]
+                let future = cloneGames games[(index + amount)..games.Length - 1] [gameNr+1..gameNr+winningNumbers] amount
+                games <- former@future
+                
+            index <- index + amount
+            amount <- 1
             keepRunning <- games.Length > index
         
         games.Length
+        
+module aoc5 =
+    open Microsoft.FSharp.Core.Operators.Checked
+
+    let parseSeeds (input: string) =
+        let numbersString = input.Split(": ")[1]
+        let numbers = List.map(fun str -> int64(str)) (List.ofArray (numbersString.Split(" ")))
+        numbers
+    let findIndices (startPhrase: string) (endPhrase: string) (collection: string list) =
+        let startI = List.findIndex (fun (str: string) -> str.StartsWith(startPhrase)) collection
+        let endI = List.findIndex (fun (str: string) -> str.StartsWith(endPhrase)) collection
+        [startI + 1; endI - 2]
+        
+    let createMapping (lines: string list) = List.map (fun (line: string) -> let dest::source::size::[] = (List.ofArray (line.Split(" ")))
+                                                                             (int64(source), int64(source) + int64(size) - int64(1), int64(dest) - int64(source))) lines
+        
+    // let rec createMapping (lines: string list) (acc: (int64 * int64) list) =
+    //     match lines with
+    //     | [] -> Map.ofList acc
+    //     | h::t -> let numbers = List.map (fun str -> int64(str)) (List.ofArray (h.Split(" ")))
+    //               let mapping = List.fold (fun (acc: (int64 * int64) list) (inp: int64) -> acc@[(numbers[1] + inp, numbers[0] + inp)]) [] [0..numbers[2] - int64(1)]
+    //               createMapping t (acc@mapping)
+                  
+    let tryFind (map: (int64 * int64 * int64) list) (index: int64)  =
+        match (List.tryFind (fun (start, eNd, _) -> start <= index && index <= eNd) map) with
+        | Some(_, _, delta) -> index + delta
+        | None -> index
+        
+    let produceSolution (input: string list) (seedsFunc: string -> int64 list) =
+        let seedSoilStr = "seed-to-soil map:"
+        let soilFertStr = "soil-to-fertilizer map:"
+        let fertWaterStr = "fertilizer-to-water map:"
+        let waterLightStr = "water-to-light map:"
+        let lightTempStr = "light-to-temperature map:"
+        let tempHumStr = "temperature-to-humidity map:"
+        let humLocStr = "humidity-to-location map:"
+        
+        let seeds = seedsFunc input[0]
+        let seedSoilInds = findIndices seedSoilStr soilFertStr input
+        let soilFertInds = findIndices soilFertStr fertWaterStr input
+        let fertWaterInds = findIndices fertWaterStr waterLightStr input
+        let waterLightInds = findIndices waterLightStr lightTempStr input
+        let lightTempInds = findIndices lightTempStr tempHumStr input
+        let tempHumInds = findIndices tempHumStr humLocStr input
+        let humLocInds = [tempHumInds[tempHumInds.Length - 1] + 3; input.Length - 1]
+        
+        let seedSoilMap = createMapping input[seedSoilInds[0]..seedSoilInds[1]]
+        let soilFertMap = createMapping input[soilFertInds[0]..soilFertInds[1]] 
+        let fertWaterMap = createMapping input[fertWaterInds[0]..fertWaterInds[1]] 
+        let waterLightMap = createMapping input[waterLightInds[0]..waterLightInds[1]] 
+        let lightTempMap = createMapping input[lightTempInds[0]..lightTempInds[1]] 
+        let tempHumMap = createMapping input[tempHumInds[0]..tempHumInds[1]] 
+        let humLocMap = createMapping input[humLocInds[0]..humLocInds[1]] 
+        
+        let locations = List.map (fun seedNr -> let soilNr = tryFind seedSoilMap seedNr
+                                                let fertNr = tryFind soilFertMap soilNr
+                                                let waterNr = tryFind fertWaterMap fertNr
+                                                let lightNr = tryFind waterLightMap waterNr
+                                                let tempNr = tryFind lightTempMap lightNr
+                                                let humNr = tryFind tempHumMap tempNr
+                                                let locNr = tryFind humLocMap humNr
+                                                locNr) seeds
+        
+        List.min locations
+        
+    let produceSolution1 (input: string list) =
+        produceSolution input parseSeeds
+    
+    let parseSeedPairs (line: string): int64 list =
+        let numbers = parseSeeds line
+        
+        let halfLength = numbers.Length / 2
+        let iters = List.map (fun num -> num * 2) [0..halfLength - 1]
+        
+        let seeds = List.fold (fun acc num -> [numbers[num]..numbers[num]+numbers[num+1]]@acc) [] iters
+        
+        seeds
+    
+    let produceSolution2 (input: string list) =
+        produceSolution input parseSeedPairs
+        
         
         
         
